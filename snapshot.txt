@@ -1,0 +1,128 @@
+root@vm792721:~# whoami && hostname && hostname -I
+root
+<HOSTNAME>
+<IP> <IP>
+root@vm792721:~# ls
+lsblk_raw  Sync
+root@vm792721:~# ss -tulpen | sed -n '1,200p'
+Failed to open cgroup2 by ID
+Failed to open cgroup2 by ID
+Netid State  Recv-Q Send-Q                  Local Address:Port  Peer Address:PortProcess
+udp   UNCONN 0      0                             <IP>:21027      <IP>:*    users:(("syncthing",pid=153685,fd=22)) uid:1000 ino:3036279 sk:1 cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service <->
+udp   UNCONN 0      0                             <IP>:51830      <IP>:*    ino:1136693 sk:2 cgroup:unreachable:d92 <->
+udp   UNCONN 0      0                           <IP>:123        <IP>:*    users:(("ntpd",pid=409,fd=24)) uid:105 ino:12198 sk:3 cgroup:/system.slice/ntp.service <->
+udp   UNCONN 0      0                         <IP>:123        <IP>:*    users:(("ntpd",pid=409,fd=19)) ino:12005 sk:4 cgroup:/system.slice/ntp.service <->
+udp   UNCONN 0      0                           <IP>:123        <IP>:*    users:(("ntpd",pid=409,fd=18)) ino:12003 sk:5 cgroup:/system.slice/ntp.service <->
+udp   UNCONN 0      0                             <IP>:123        <IP>:*    users:(("ntpd",pid=409,fd=17)) ino:11999 sk:6 cgroup:/system.slice/ntp.service <->
+udp   UNCONN 0      0                             <IP>:59694      <IP>:*    users:(("syncthing",pid=153685,fd=17)) uid:1000 ino:3036268 sk:7 cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service <->
+udp   UNCONN 0      0                                   *:22000            *:*    users:(("syncthing",pid=153685,fd=12)) uid:1000 ino:3036264 sk:8 cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service v6only:0 <->
+udp   UNCONN 0      0                                [::]:21027         [::]:*    users:(("syncthing",pid=153685,fd=23)) uid:1000 ino:3036280 sk:9 cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service v6only:1 <->
+udp   UNCONN 0      0                                [::]:51830         [::]:*    ino:1136694 sk:a cgroup:unreachable:d92 v6only:1 <->
+udp   UNCONN 0      0                                [::]:60468         [::]:*    users:(("syncthing",pid=153685,fd=18)) uid:1000 ino:3036271 sk:b cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service v6only:1 <->
+udp   UNCONN 0      0      [fe80::5054:ff:fe2d:fd7c]%ens3:123           [::]:*    users:(("ntpd",pid=409,fd=25)) uid:105 ino:12201 sk:c cgroup:/system.slice/ntp.service v6only:1 <->
+udp   UNCONN 0      0                               [::1]:123           [::]:*    users:(("ntpd",pid=409,fd=20)) ino:12007 sk:d cgroup:/system.slice/ntp.service v6only:1 <->
+udp   UNCONN 0      0                                [::]:123           [::]:*    users:(("ntpd",pid=409,fd=16)) ino:11996 sk:e cgroup:/system.slice/ntp.service v6only:1 <->
+tcp   LISTEN 0      128                           <IP>:22         <IP>:*    users:(("sshd",pid=414,fd=3)) ino:12057 sk:f cgroup:/system.slice/ssh.service <->
+tcp   LISTEN 0      4096                                *:22000            *:*    users:(("syncthing",pid=153685,fd=19)) uid:1000 ino:3036273 sk:10 cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service v6only:0 <->
+tcp   LISTEN 0      128                              [::]:22            [::]:*    users:(("sshd",pid=414,fd=4)) ino:12068 sk:11 cgroup:/system.slice/ssh.service v6only:1 <->
+tcp   LISTEN 0      4096                                *:8384             *:*    users:(("syncthing",pid=153685,fd=9)) uid:1000 ino:3037396 sk:12 cgroup:/system.slice/system-syncthing.slice/syncthing@mark.service v6only:0 <->
+root@vm792721:~# ip -brief link show type wireguard
+wg0              UNKNOWN        <POINTOPOINT,NOARP,UP,LOWER_UP>
+root@vm792721:~# ip -brief address show
+lo               UNKNOWN        <IP>/8 ::1/128
+ens3             UP             <IP>/32 fe80::5054:ff:fe2d:fd7c/64
+wg0              UNKNOWN        <IP>/24
+root@vm792721:~# systemctl list-units 'wg-quick@*'
+  UNIT                 LOAD   ACTIVE SUB    DESCRIPTION
+  wg-quick@wg0.service loaded active exited WireGuard via wg-quick(8) for wg0
+
+LOAD   = Reflects whether the unit definition was properly loaded.
+ACTIVE = The high-level unit activation state, i.e. generalization of SUB.
+SUB    = The low-level unit activation state, values depend on unit type.
+1 loaded units listed. Pass --all to see loaded but inactive units, too.
+To show all installed unit files use 'systemctl list-unit-files'.
+root@vm792721:~# wg show 2>/dev/null || echo "wg not running"
+interface: wg0
+  public key: <WG_KEY>
+  private key: (hidden)
+  listening port: 51830
+
+peer: <WG_KEY>
+  endpoint: <IP>:62296
+  allowed ips: <IP>/32
+  latest handshake: 11 seconds ago
+  transfer: 14.46 GiB received, 126.91 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:11020
+  allowed ips: <IP>/32
+  latest handshake: 13 seconds ago
+  transfer: 3.86 GiB received, 99.25 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:30346
+  allowed ips: <IP>/32
+  latest handshake: 1 minute, 6 seconds ago
+  transfer: 3.55 GiB received, 25.35 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:45596
+  allowed ips: <IP>/32
+  latest handshake: 2 minutes, 34 seconds ago
+  transfer: 1.75 GiB received, 44.03 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:42996
+  allowed ips: <IP>/32
+  latest handshake: 4 minutes, 11 seconds ago
+  transfer: 1.37 GiB received, 33.28 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:3266
+  allowed ips: <IP>/32
+  latest handshake: 36 minutes, 21 seconds ago
+  transfer: 1.62 GiB received, 35.84 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:48831
+  allowed ips: <IP>/32
+  latest handshake: 6 hours, 17 minutes, 4 seconds ago
+  transfer: 122.18 MiB received, 433.47 MiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:8811
+  allowed ips: <IP>/32
+  latest handshake: 8 hours, 27 minutes, 35 seconds ago
+  transfer: 13.92 GiB received, 36.58 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:57567
+  allowed ips: <IP>/32
+  latest handshake: 2 days, 15 hours, 38 minutes, 28 seconds ago
+  transfer: 5.29 GiB received, 41.02 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:5030
+  allowed ips: <IP>/32
+  latest handshake: 11 days, 44 minutes, 7 seconds ago
+  transfer: 794.84 MiB received, 46.22 GiB sent
+
+peer: <WG_KEY>
+  endpoint: <IP>:46051
+  allowed ips: <IP>/32
+  latest handshake: 13 days, 15 hours, 53 minutes, 46 seconds ago
+  transfer: 4.94 GiB received, 46.60 GiB sent
+
+peer: <WG_KEY>
+  allowed ips: <IP>/32
+
+peer: <WG_KEY>
+  allowed ips: <IP>/32
+
+peer: <WG_KEY>
+  allowed ips: <IP>/32
+root@vm792721:~# ufw status verbose 2>/dev/null || true
+root@vm792721:~# nft list ruleset 2>/dev/null | sed -n '1,200p' || true
+root@vm792721:~# grep -E '^(Port|PasswordAuthentication|PermitRootLogin)\s' /etc/ssh/sshd_config
+PermitRootLogin yes
+root@vm792721:~#
